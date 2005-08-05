@@ -19,7 +19,7 @@ server at "@service_url@" responded:
   <td class=roweven>@login_status@</td>
 </tr>
 
-<if @login_message@ eq "ok">
+<if @login_status@ eq "ok">
   <tr>
     <td class=rowodd>CVS User</td>
     <td class=rowodd>@cvs_user@</td>
@@ -33,7 +33,7 @@ server at "@service_url@" responded:
 <if @login_message@ ne "">
   <tr>
     <td class=rowodd>Login message</td>
-      <if @login_message@ eq "ok">
+      <if @login_status@ eq "ok">
         <td class=rowodd>@login_message@</td>
      </if>
      <else>
