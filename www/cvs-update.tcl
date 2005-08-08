@@ -60,6 +60,41 @@ set package_dir "$acs_root_dir/packages"
 ad_return_top_of_page "[im_header]\n[im_navbar]"
 
 
+
+# ------------------------------------------------------------
+# Make sure everything is writable
+#
+
+ns_write "<h2>Setting Permissions</h2>\n"
+ns_write "<pre>\n"
+
+if { [catch {
+
+	set cmd "cd $package_dir; chmod -R ugo+rwx * 2>&1"
+	ns_write "$cmd\n\n"
+	ns_log Notice "cvs-update: cmd=$cmd"
+	set fp [open "|[im_bash_command] -c \"$cmd\"" "r"]
+	while { [gets $fp line] >= 0 } {
+	    ns_write "$line\n"
+	}
+	close $fp
+	ns_write "\nPermissions successfully set:\n\n"
+
+
+} errmsg] } {
+	ns_write "</pre>
+        <p>Unable to execute update command:<br><pre>$cmd\n</pre>
+	The server returned the error:
+	<pre>$errmsg\n</pre>
+	<a href=\"http://www.project-open.com/contact/\">
+        Please send us a note
+        </a>:
+        <pre>"
+}
+
+ns_write "</pre>\n"
+
+
 # ------------------------------------------------------------
 # Log the dude in
 #
@@ -144,6 +179,45 @@ if {!$error} {
     ns_write "(APM) page and update the data model.\n</p>\n"
 
 }
+
+
+
+
+# ------------------------------------------------------------
+# Make sure everything is writable again
+#
+
+ns_write "<h2>Setting Permissions</h2>\n"
+ns_write "<pre>\n"
+
+if { [catch {
+
+	set cmd "cd $package_dir; chmod -R ugo+rwx * 2>&1"
+	ns_write "$cmd\n\n"
+	ns_log Notice "cvs-update: cmd=$cmd"
+	set fp [open "|[im_bash_command] -c \"$cmd\"" "r"]
+	while { [gets $fp line] >= 0 } {
+	    ns_write "$line\n"
+	}
+	close $fp
+	ns_write "\nPermissions successfully set:\n\n"
+
+
+} errmsg] } {
+	ns_write "</pre>
+        <p>Unable to execute update command:<br><pre>$cmd\n</pre>
+	The server returned the error:
+	<pre>$errmsg\n</pre>
+	<a href=\"http://www.project-open.com/contact/\">
+        Please send us a note
+        </a>:
+        <pre>"
+}
+
+ns_write "</pre>\n"
+
+
+
 
 ns_log Notice "cvs-update: before writing footer"
 ns_write [im_footer]
