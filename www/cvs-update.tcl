@@ -44,7 +44,14 @@ set page_title "Automatic Software Updates"
 set context_bar [im_context_bar $page_title]
 set error 0
 
-# Main directory of the OpenACS installatin
+# Get the system platform (unix, windows or default)
+# We need to know if we are on "windows" in order to
+# set the permissions before and after the CVS update.
+#
+global tcl_platform
+set platform [lindex $tcl_platform(platform) 0]
+
+# Main directory of the OpenACS installation
 # Example: /web/projop
 set acs_root_dir [acs_root_dir]
 
@@ -55,21 +62,23 @@ set package_dir "$acs_root_dir/packages"
 
 # ------------------------------------------------------------
 # Return the page header.
+# This technique allows us to write out HTML output while
+# the processes are runnin. Otherwise, the user would
+# not see any intermediate results, but only a screen 
+# after possibly many minutes of waiting...
 #
 
 ad_return_top_of_page "[im_header]\n[im_navbar]"
 
 
-
 # ------------------------------------------------------------
 # Make sure everything is writable
 #
+if {[string equal $platform "windows"]} {
 
-ns_write "<h2>Setting Permissions</h2>\n"
-ns_write "<pre>\n"
-
-if { [catch {
-
+    ns_write "<h2>Setting Permissions</h2>\n"
+    ns_write "<pre>\n"
+    if { [catch {
 	set cmd "cd $package_dir; chmod -R ugo+rwx * 2>&1"
 	ns_write "$cmd\n\n"
 	ns_log Notice "cvs-update: cmd=$cmd"
@@ -79,9 +88,7 @@ if { [catch {
 	}
 	close $fp
 	ns_write "\nPermissions successfully set:\n\n"
-
-
-} errmsg] } {
+    } errmsg] } {
 	ns_write "</pre>
         <p>Unable to execute update command:<br><pre>$cmd\n</pre>
 	The server returned the error:
@@ -90,9 +97,9 @@ if { [catch {
         Please send us a note
         </a>:
         <pre>"
+    }
+    ns_write "</pre>\n"
 }
-
-ns_write "</pre>\n"
 
 
 # ------------------------------------------------------------
@@ -187,11 +194,11 @@ if {!$error} {
 # Make sure everything is writable again
 #
 
-ns_write "<h2>Setting Permissions</h2>\n"
-ns_write "<pre>\n"
+if {[string equal $platform "windows"]} {
 
-if { [catch {
-
+    ns_write "<h2>Setting Permissions</h2>\n"
+    ns_write "<pre>\n"
+    if { [catch {
 	set cmd "cd $package_dir; chmod -R ugo+rwx * 2>&1"
 	ns_write "$cmd\n\n"
 	ns_log Notice "cvs-update: cmd=$cmd"
@@ -201,9 +208,7 @@ if { [catch {
 	}
 	close $fp
 	ns_write "\nPermissions successfully set:\n\n"
-
-
-} errmsg] } {
+    } errmsg] } {
 	ns_write "</pre>
         <p>Unable to execute update command:<br><pre>$cmd\n</pre>
 	The server returned the error:
@@ -212,10 +217,10 @@ if { [catch {
         Please send us a note
         </a>:
         <pre>"
+    }
+    ns_write "</pre>\n"
+
 }
-
-ns_write "</pre>\n"
-
 
 
 
