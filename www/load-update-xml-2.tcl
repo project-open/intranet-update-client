@@ -154,13 +154,13 @@ set login_status [[$root_node selectNodes {//login_status}] text]
 set login_message [[$root_node selectNodes {//login_message}] text]
 
 # May be new or old protocol - accept the error and use defaults
-set cvs_user "anonymous"
+set cvs_user ""
 set cvs_password ""
 catch {
     set cvs_user [[$root_node selectNodes {/po_software_update/login/cvs_user}] text]
     set cvs_password [[$root_node selectNodes {/po_software_update/login/cvs_password}] text]
 } err_msg
-
+if {"" == $cvs_user} { set cvs_user "anonymous" }
 
 set version_html ""
 
