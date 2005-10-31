@@ -24,7 +24,7 @@ ad_page_contract {
     cvs_root
     cvs_command
     { cvs_protocol "pserver" }
-    { cvs_user "anonymous" }
+    { cvs_user "" }
     { cvs_password "" }
 }
 
@@ -43,6 +43,12 @@ set return_url "[ad_conn url]?[ad_conn query]"
 set page_title "Automatic Software Updates"
 set context_bar [im_context_bar $page_title]
 set error 0
+
+# Anonymous user has access without 
+if {"" == $cvs_user} { 
+    set cvs_user "anonymous" 
+    set cvs_password ""
+}
 
 # Get the system platform (unix, windows or default)
 # We need to know if we are on "windows" in order to
