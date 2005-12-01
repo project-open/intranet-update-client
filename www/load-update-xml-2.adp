@@ -5,7 +5,7 @@
 
 <h1>Login Status</h1>
 <p>
-The <span class=brandfirst>Project/</span><span class=brandsec>Open</span>
+The <span class=brandsec>]</span><span class=brandfirst>project-open</span><span class=brandsec>[</span>
 server at "@service_url@" responded:
 </p>
 
