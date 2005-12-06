@@ -174,6 +174,7 @@ if {!$error} {
 	set cmd "export HOME=$acs_root_dir; cd $package_dir; cvs -z3 -d :$cvs_protocol:$cvs_user$cvs_password_phrase@$cvs_server:$cvs_root $cvs_command 2>&1"
 	ns_write "$cmd\n\n"
 	ns_log Notice "cvs-update: cmd=$cmd"
+
 	set fp [open "|[im_bash_command] -c \"$cmd\"" "r"]
 	while { [gets $fp line] >= 0 } {
 	    ns_write "$line\n"
