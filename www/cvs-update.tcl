@@ -125,9 +125,15 @@ ns_write "<li>Root = $cvs_root\n"
 ns_write "</ul>\n"
 ns_write "<pre>\n"
 
+
+set cvs_password_phrase ""
+if {"" != $cvs_password} {
+    set cvs_password_phrase ":$cvs_password"
+}
+
 if {[catch {
 
-    set cmd "export HOME=$acs_root_dir; cvs -d :$cvs_protocol:$cvs_user:$cvs_password@$cvs_server:$cvs_root login 2>&1"
+    set cmd "export HOME=$acs_root_dir; cvs -d :$cvs_protocol:$cvs_user$cvs_password_phrase@$cvs_server:$cvs_root login 2>&1"
     ns_write "$cmd\n"
 
     set fp [open "|[im_bash_command] -c \"$cmd\"" "w"]
@@ -165,7 +171,7 @@ if {!$error} {
 
     if { [catch {
 
-	set cmd "export HOME=$acs_root_dir; cd $package_dir; cvs -z3 -d :$cvs_protocol:$cvs_user:$cvs_password@$cvs_server:$cvs_root $cvs_command 2>&1"
+	set cmd "export HOME=$acs_root_dir; cd $package_dir; cvs -z3 -d :$cvs_protocol:$cvs_user$cvs_password_phrase@$cvs_server:$cvs_root $cvs_command 2>&1"
 	ns_write "$cmd\n\n"
 	ns_log Notice "cvs-update: cmd=$cmd"
 	set fp [open "|[im_bash_command] -c \"$cmd\"" "r"]
