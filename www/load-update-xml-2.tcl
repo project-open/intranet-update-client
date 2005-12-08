@@ -49,20 +49,24 @@ set update_xml ""
 # Fetch the update.xml file from the remote server
 #
 
+set err_log ""
 if { [catch {
 
-    ns_log Notice "load-update-xml-2: Opening $full_url"
+    append err_log "load-update-xml-2: Opening $full_url\n"
     set httpChan [lindex [ns_httpopen GET $full_url] 0]
-    ns_log Notice "load-update-xml-2: httpChan=$httpChan"
+    append err_log "load-update-xml-2: httpChan=$httpChan\n"
 
-    ns_log Notice "load-update-xml-2: before gets"
+    append err_log "load-update-xml-2: before gets\n"
     while {[gets $httpChan update_line] >= 0} {
-	ns_log Notice "load-update-xml-2: getting line..."
+	append err_log "load-update-xml-2: getting line...\n"
 	append update_xml $update_line
+	append err_log "line: $update_line\n"
     }
 
-    ns_log Debug "load-update-xml-2: Done copying data."
+    append err_log "load-update-xml-2: Done copying data.\n"
     close $httpChan
+    append err_log "load-update-xml-2: httpChan closed.\n"
+
 
 } errmsg] } {
     ad_return_complaint 1 "Error while accessing the URL '$service_url'.<br>
@@ -70,6 +74,18 @@ if { [catch {
     <blockquote><pre>[ad_quotehtml $errmsg]</pre></blockquote>"
     return
 }	
+
+if {"" == $update_xml} {
+    ad_return_complaint 1 "Found an empty XML file accessing the URL '$service_url'.<br>
+    This means that your server(!) was not able to access the URL.<br>
+    Please check the the Internet and firewall configuration of your
+    server(!) and verify that the "nsd" (Linux) or "nsd4" (Windows) 
+    process has the right to access the URL.<br>
+    Here is the log file:<br>
+    <pre>$err_log</pre>"
+    return
+}	
+
 
 # ------------------------------------------------------------
 # Check whether it's a HTML or an XML
