@@ -52,21 +52,19 @@ set update_xml ""
 set err_log ""
 if { [catch {
 
-    append err_log "load-update-xml-2: Opening $full_url\n"
-    set httpChan [lindex [ns_httpopen GET $full_url] 0]
-    append err_log "load-update-xml-2: httpChan=$httpChan\n"
+    if {1} {
 
-    append err_log "load-update-xml-2: before gets\n"
-    while {[gets $httpChan update_line] >= 0} {
-	append err_log "load-update-xml-2: getting line...\n"
-	append update_xml $update_line
-	append err_log "line: $update_line\n"
+	set update_xml [ns_httpget $full_url]
+
+    } else {
+
+	set httpChan [lindex [ns_httpopen GET $full_url] 0]
+	while {[gets $httpChan update_line] >= 0} {
+	    append update_xml $update_line
+	}
+	close $httpChan
+
     }
-
-    append err_log "load-update-xml-2: Done copying data.\n"
-    close $httpChan
-    append err_log "load-update-xml-2: httpChan closed.\n"
-
 
 } errmsg] } {
     ad_return_complaint 1 "Error while accessing the URL '$service_url'.<br>
