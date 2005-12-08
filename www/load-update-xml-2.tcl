@@ -49,23 +49,8 @@ set update_xml ""
 # Fetch the update.xml file from the remote server
 #
 
-set err_log ""
 if { [catch {
-
-    if {1} {
-
-	set update_xml [ns_httpget $full_url]
-
-    } else {
-
-	set httpChan [lindex [ns_httpopen GET $full_url] 0]
-	while {[gets $httpChan update_line] >= 0} {
-	    append update_xml $update_line
-	}
-	close $httpChan
-
-    }
-
+    set update_xml [ns_httpget $full_url]
 } errmsg] } {
     ad_return_complaint 1 "Error while accessing the URL '$service_url'.<br>
     Please check your URL. The following error was returned: <br>
@@ -77,10 +62,8 @@ if {"" == $update_xml} {
     ad_return_complaint 1 "Found an empty XML file accessing the URL '$service_url'.<br>
     This means that your server(!) was not able to access the URL.<br>
     Please check the the Internet and firewall configuration of your
-    server(!) and verify that the 'nsd' (Linux) or 'nsd4' (Windows) 
-    process has the right to access the URL.<br>
-    Here is the log file:<br>
-    <pre>$err_log</pre>"
+    server and verify that the 'nsd' (Linux) or 'nsd4' (Windows) 
+    process has access to the URL.<br>
     return
 }	
 
