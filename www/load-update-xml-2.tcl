@@ -79,7 +79,7 @@ if {"" == $update_xml} {
     ad_return_complaint 1 "Found an empty XML file accessing the URL '$service_url'.<br>
     This means that your server(!) was not able to access the URL.<br>
     Please check the the Internet and firewall configuration of your
-    server(!) and verify that the "nsd" (Linux) or "nsd4" (Windows) 
+    server(!) and verify that the 'nsd' (Linux) or 'nsd4' (Windows) 
     process has the right to access the URL.<br>
     Here is the log file:<br>
     <pre>$err_log</pre>"
